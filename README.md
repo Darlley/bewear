@@ -38,3 +38,5 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 
 npx @better-auth/cli@latest generate
+npx drizzle-kit push
+npx drizzle-kit studio

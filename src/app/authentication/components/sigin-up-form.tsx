@@ -4,9 +4,12 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { authClient } from '@/lib/auth-client'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod/v4'
 
 const formSchema = z.object({
@@ -22,6 +25,7 @@ const formSchema = z.object({
 })
 
 export default function SignUpForm() {
+  const router = useRouter()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,8 +36,34 @@ export default function SignUpForm() {
     }
   })
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data)
+  const onSubmit = async ({ name, email, password }: z.infer<typeof formSchema>) => {
+    const { data, error } = await authClient.signUp.email({
+      name,
+      email,
+      password,
+      fetchOptions: {
+        onSuccess: () => {
+          toast.success("Sucesso")
+          router.push('/')
+        },
+        onError: (error) => {
+          console.log("error", error)
+          
+          if(error.error.code == "USER_ALREADY_EXISTS") {
+            form.setError("email", {
+              type: "manual",
+              message: "Email já cadastrado."
+            })
+            return
+          }
+          
+          toast.error("Aconteceu um erro ao tentar autenticar.")
+        }
+      }
+    });
+
+    if(data) toast.success(`Bem vindo ${data.user?.name}`)
+    if(error) toast.error("Aconteceu um erro.")
   }
 
   return (
