@@ -19,22 +19,26 @@ import {
 } from "@/components/ui/tabs"
 import SignInForm from "./components/sigin-in-form"
 import SignUpForm from "./components/sigin-up-form"
+import Header from "@/components/header"
 
 export default function AuthenticationPage() {
   return (
-    <div className="flex w-full max-w-sm flex-col gap-6">
-      <Tabs defaultValue="signin">
-        <TabsList>
-          <TabsTrigger value="signin">Entrar</TabsTrigger>
-          <TabsTrigger value="signup">Criar conta</TabsTrigger>
-        </TabsList>
-        <TabsContent value="signin">
-          <SignInForm />
-        </TabsContent>
-        <TabsContent value="signup">
-          <SignUpForm />
-        </TabsContent>
-      </Tabs>
-    </div>
+    <>
+      <Header />
+      <div className="flex w-full flex-col gap-6 p-5">
+        <Tabs defaultValue="signin">
+          <TabsList>
+            <TabsTrigger value="signin">Entrar</TabsTrigger>
+            <TabsTrigger value="signup">Criar conta</TabsTrigger>
+          </TabsList>
+          <TabsContent value="signin">
+            <SignInForm />
+          </TabsContent>
+          <TabsContent value="signup">
+            <SignUpForm />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
   )
 }
